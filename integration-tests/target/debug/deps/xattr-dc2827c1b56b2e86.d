@@ -1,0 +1,12 @@
+/Users/eat/NonCloud/fontfactory/integration-tests/target/debug/deps/xattr-dc2827c1b56b2e86.rmeta: /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/lib.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/error.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/mod.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/util.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/linux_macos/mod.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/linux_macos/macos.rs
+
+/Users/eat/NonCloud/fontfactory/integration-tests/target/debug/deps/libxattr-dc2827c1b56b2e86.rlib: /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/lib.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/error.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/mod.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/util.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/linux_macos/mod.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/linux_macos/macos.rs
+
+/Users/eat/NonCloud/fontfactory/integration-tests/target/debug/deps/xattr-dc2827c1b56b2e86.d: /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/lib.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/error.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/mod.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/util.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/linux_macos/mod.rs /Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/linux_macos/macos.rs
+
+/Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/lib.rs:
+/Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/error.rs:
+/Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/mod.rs:
+/Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/util.rs:
+/Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/linux_macos/mod.rs:
+/Users/eat/.cargo/registry/src/github.com-1ecc6299db9ec823/xattr-0.2.3/src/sys/linux_macos/macos.rs:
