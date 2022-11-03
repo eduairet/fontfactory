@@ -9,7 +9,6 @@ crate-type = ["cdylib"]
 
 [dependencies]
 fonttools = "0.1.0"
-shellexpand = "2.1.2"
 near-sdk = "4.0.0"
 uint = { version = "0.9.3", default-features = false }
 

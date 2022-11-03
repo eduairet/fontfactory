@@ -1,63 +1,73 @@
-// NEAR
+/*
+ * Example smart contract written in RUST
+ *
+ * Learn more about writing NEAR smart contracts with Rust:
+ * https://near-docs.io/develop/Contract
+ *
+ */
+
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{near_bindgen, AccountId};
+use near_sdk::{log, near_bindgen};
 
 // Font Engine
 mod font_engine;
 use font_engine::font_engine;
 
-// Contract
+// Define the default message
+const DEFAULT_MESSAGE: &str = "Hello";
+
+// Define the contract structure
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct FontFactory {
-    pub owner: AccountId,
-    pub font_id: u128,
+pub struct Contract {
+    message: String,
 }
 
-impl Default for FontFactory {
+// Define the default, which automatically initializes the contract
+impl Default for Contract {
     fn default() -> Self {
         Self {
-            owner: "v1.fontfactory.eduairet.testnet".parse().unwrap(),
-            font_id: 0,
+            message: DEFAULT_MESSAGE.to_string(),
         }
     }
 }
 
+// Implement the contract structure
 #[near_bindgen]
-impl FontFactory {
-    #[init]
-    #[private] // Public - but only callable by env::current_account_id()
-    pub fn init(owner: AccountId) -> Self {
-        Self { owner, font_id: 0 }
+impl Contract {
+    // Public method - returns the greeting saved, defaulting to DEFAULT_MESSAGE
+    pub fn get_greeting(&self) -> String {
+        return self.message.clone();
     }
 
-    // Public - owner getter
-    pub fn get_owner(&self) -> AccountId {
-        self.owner.clone()
-    }
-
-    // Public - but only callable by env::current_account_id(). Sets the beneficiary
-    #[private]
-    #[payable]
-    pub fn mint_font(&mut self, owner: AccountId) {
-        self.owner = owner;
-        font_engine(String::from("NFTHASH"));
+    // Public method - accepts a greeting, such as "howdy", and records it
+    pub fn set_greeting(&mut self, message: String) {
+        // Use env::log to record logs permanently to the blockchain!
+        log!("Saving greeting {}", message);
+        self.message = message.clone();
+        font_engine(message.clone());
     }
 }
 
-/* #[cfg(test)]
+/*
+ * The rest of this file holds the inline tests for the code above
+ * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
+ */
+#[cfg(test)]
 mod tests {
     use super::*;
-    use near_sdk::test_utils::VMContextBuilder;
-    use near_sdk::testing_env;
-    use near_sdk::Balance;
-
-    const OWNER: &str = "owner";
-    const NEAR: u128 = 1000000000000000000000000;
 
     #[test]
-    fn initializes() {
-        let contract = FontFactory::init(OWNER.parse().unwrap());
-        assert_eq!(contract.owner, OWNER.parse().unwrap())
+    fn get_default_greeting() {
+        let contract = Contract::default();
+        // this test did not call set_greeting so should return the default "Hello" greeting
+        assert_eq!(contract.get_greeting(), "Hello".to_string());
     }
-} */
+
+    #[test]
+    fn set_then_get_greeting() {
+        let mut contract = Contract::default();
+        contract.set_greeting("howdy".to_string());
+        assert_eq!(contract.get_greeting(), "howdy".to_string());
+    }
+}
