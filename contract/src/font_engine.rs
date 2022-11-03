@@ -4,7 +4,7 @@ use fonttools::name::NameRecord;
 use std::fs::File;
 
 // Font Engine
-pub fn set_font_name(nft_hash: String) {
+pub fn mint_font(nft_hash: String) {
     // Source font file
     let fontfile = File::open("Paradisio-Regular.otf").unwrap();
     let mut source_font = font::load(fontfile).expect("Could not load font");

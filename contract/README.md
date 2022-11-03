@@ -1,87 +1,49 @@
-# Hello NEAR Contract
+# FontFactory Contract
 
-The smart contract exposes two methods to enable storing and retrieving a greeting in the NEAR network.
+---
 
-```rust
-const DEFAULT_GREETING: &str = "Hello";
+Files:
 
-#[near_bindgen]
-#[derive(BorshDeserialize, BorshSerialize)]
-pub struct Contract {
-    greeting: String,
-}
+-   [Contract](./src/lib.rs)
+-   [Font Engine](./src/font_engine.rs)
 
-impl Default for Contract {
-    fn default() -> Self {
-        Self{greeting: DEFAULT_GREETING.to_string()}
-    }
-}
+---
 
-#[near_bindgen]
-impl Contract {
-    // Public: Returns the stored greeting, defaulting to 'Hello'
-    pub fn get_greeting(&self) -> String {
-        return self.greeting.clone();
-    }
+1. Build and Deploy the Contract
 
-    // Public: Takes a greeting, such as 'howdy', and records it
-    pub fn set_greeting(&mut self, greeting: String) {
-        // Record a log permanently to the blockchain!
-        log!("Saving greeting {}", greeting);
-        self.greeting = greeting;
-    }
-}
-```
+    - You can automatically compile and deploy the contract in the NEAR testnet by running:
 
-<br />
+        ```bash
+        ./deploy.sh
+        ```
 
-# Quickstart
+    - Once finished, check the `neardev/dev-account` file to find the address in which the contract was deployed:
 
-1. Make sure you have installed [rust](https://rust.org/).
-2. Install the [`NEAR CLI`](https://github.com/near/near-cli#setup)
+        ```bash
+        cat ./neardev/dev-account
+        # e.g. dev-1667357419594-73844543672735
+        ```
 
-<br />
+2. Check the Font ID with the view method `get_font_id`
 
-## 1. Build and Deploy the Contract
-You can automatically compile and deploy the contract in the NEAR testnet by running:
+    ```bash
+    # Use near-cli to get the greeting
+    near view <dev-account> get_font_id
+    ```
 
-```bash
-./deploy.sh
-```
+    - Anyone can view
 
-Once finished, check the `neardev/dev-account` file to find the address in which the contract was deployed:
+3. Mint a Font with the change method `create_custom_font`
 
-```bash
-cat ./neardev/dev-account
-# e.g. dev-1659899566943-21539992274727
-```
+    - It calls the font engine and runs it to an existing font
+    - The new font will have a custom NAME ID 3 on the open type name table
+        - This is a sha256 digest made from the sender address and the Font ID word you select
+    - This method changes the contract's state
+    - Just can be invoked with a NEAR account and paying gas
 
-<br />
-
-## 2. Retrieve the Greeting
-
-`get_greeting` is a read-only method (aka `view` method).
-
-`View` methods can be called for **free** by anyone, even people **without a NEAR account**!
-
-```bash
-# Use near-cli to get the greeting
-near view <dev-account> get_greeting
-```
-
-<br />
-
-## 3. Store a New Greeting
-`set_greeting` changes the contract's state, for which it is a `change` method.
-
-`Change` methods can only be invoked using a NEAR account, since the account needs to pay GAS for the transaction.
-
-```bash
-# Use near-cli to set a new greeting
-near call <dev-account> set_greeting '{"message":"howdy"}' --accountId <dev-account>
-```
-
-**Tip:** If you would like to call `set_greeting` using your own account, first login into NEAR using:
+        ```bash
+        near call <dev-account> create_custom_font '{"fontid":"MyFont"}' --accountId <dev-account>
+        ```
 
 ```bash
 # Use near-cli to login your NEAR account
