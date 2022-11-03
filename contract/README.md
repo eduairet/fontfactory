@@ -45,9 +45,15 @@ Files:
         near call <dev-account> create_custom_font '{"fontid":"MyFont"}' --accountId <dev-account>
         ```
 
-```bash
-# Use near-cli to login your NEAR account
-near login
-```
+4. Sign transaction
 
-and then use the logged account to sign the transaction: `--accountId <your-account>`.
+    - First login
+        ```bash
+        # Use near-cli to login your NEAR account
+        near login
+        ```
+    - Sign the transaction: `--accountId <your-account>`.
+
+5. Chack your font in your download folder
+    - Open it in Font Book to check the unique identifier
+      ![Success](../resources/meta.png)

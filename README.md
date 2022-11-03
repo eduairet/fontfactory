@@ -1,6 +1,6 @@
 # FontFactory
 
-Created with `create-near-app`
+Created with `create-near-app` by [Eduardo Aire](https://github.com/eduairet)
 
 ## Contract
 
@@ -22,7 +22,7 @@ Run the frontend
     - `/frontend/index.html` is a great place to start exploring.
     - Note that it loads in `/frontend/index.js`
 3. Test your contract with `npm test`
-    - This run the tests in `integration-tests` directory.
+    - This run the unit tests in `lib.rs` directory.
 
 ## Deploy
 

@@ -16,15 +16,9 @@ use font_engine::mint_font;
 
 // Util
 fn hash_from_str(message: String) -> String {
-    // create a Sha256 object
     let mut sha256 = Sha256::new();
-
-    // write input message
     sha256.update(format!("{}", message));
-
-    // read hash digest and consume hasher
     let result: String = format!("{:X}", sha256.finalize());
-
     return result;
 }
 
@@ -50,6 +44,13 @@ impl Default for Contract {
 // FontFactory Contract
 #[near_bindgen]
 impl Contract {
+    // Initialization
+    #[init]
+    #[private]
+    pub fn init(fontid: String) -> Self {
+        Self { fontid }
+    }
+
     // Public method - returns the hashed FontID saved
     pub fn get_font_id(&self) -> String {
         return self.fontid.clone();
@@ -122,7 +123,7 @@ mod tests {
                 }
             }
         }
-        // Assertions
+        // Different data
         assert_ne!(source_font_id, out_font_id);
     }
 }
