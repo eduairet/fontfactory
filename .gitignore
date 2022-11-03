@@ -6,6 +6,7 @@ node_modules
 .pnp.js
 templates/out
 /neardev
+*/neardev
 # testing
 /coverage
 tmp-project
