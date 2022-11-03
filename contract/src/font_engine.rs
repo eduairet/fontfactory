@@ -4,7 +4,7 @@ use fonttools::name::NameRecord;
 use std::fs::File;
 
 // Font Engine
-pub fn font_engine(nft_hash: String) {
+pub fn set_font_name(nft_hash: String) {
     // Source font file
     let fontfile = File::open("Paradisio-Regular.otf").unwrap();
     let mut source_font = font::load(fontfile).expect("Could not load font");
@@ -44,7 +44,7 @@ pub fn font_engine(nft_hash: String) {
             }
         }
     }
-    // NFT Generator
+    // New File Generator
     let home = std::env::var("HOME").unwrap();
     let out_file = format!("{}/Downloads/Paradisio-Regular-NFT.otf", home);
     let mut nft_font = File::create(out_file).expect("Could not create file");

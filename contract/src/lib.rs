@@ -7,67 +7,90 @@
  */
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::env::signer_account_id;
 use near_sdk::{log, near_bindgen};
+
+// Hashing
+use sha2::{Digest, Sha256};
 
 // Font Engine
 mod font_engine;
-use font_engine::font_engine;
+use font_engine::set_font_name;
 
-// Define the default message
-const DEFAULT_MESSAGE: &str = "Hello";
+// Util
+// Private function
+fn hash_from_str(message: String) -> String {
+    // create a Sha256 object
+    let mut sha256 = Sha256::new();
 
-// Define the contract structure
+    // write input message
+    sha256.update(format!("{}", message));
+
+    // read hash digest and consume hasher
+    let result: String = format!("{:X}", sha256.finalize());
+
+    return result;
+}
+
+// Default FontID before digest
+const DEFAULT_FONTID: &str = "MyFont";
+
+// FontFactory structure
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Contract {
-    message: String,
+    fontid: String,
 }
 
-// Define the default, which automatically initializes the contract
+// Default Initialization
 impl Default for Contract {
     fn default() -> Self {
         Self {
-            message: DEFAULT_MESSAGE.to_string(),
+            fontid: hash_from_str(DEFAULT_FONTID.to_string()),
         }
     }
 }
 
-// Implement the contract structure
+// FontFactory Contract
 #[near_bindgen]
 impl Contract {
-    // Public method - returns the greeting saved, defaulting to DEFAULT_MESSAGE
-    pub fn get_greeting(&self) -> String {
-        return self.message.clone();
+    // Public method - returns the hashed FontID saved
+    pub fn get_font_id(&self) -> String {
+        return self.fontid.clone();
     }
 
-    // Public method - accepts a greeting, such as "howdy", and records it
-    pub fn set_greeting(&mut self, message: String) {
+    // Public method - accepts a Tx hash, and makes a hash from it and the signer NEAR address
+    pub fn set_font_id(&mut self, fontid: String) {
         // Use env::log to record logs permanently to the blockchain!
-        log!("Saving greeting {}", message);
-        self.message = message.clone();
-        font_engine(message.clone());
+        log!("Saving greeting {}", fontid);
+        self.fontid = fontid.clone();
+        set_font_name(hash_from_str(format!(
+            "{}{}",
+            fontid.clone(),
+            String::from(signer_account_id())
+        )));
     }
 }
 
-/*
- * The rest of this file holds the inline tests for the code above
- * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
- */
+// Contract tests
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn get_default_greeting() {
+    fn get_font_id() {
         let contract = Contract::default();
         // this test did not call set_greeting so should return the default "Hello" greeting
-        assert_eq!(contract.get_greeting(), "Hello".to_string());
+        assert_eq!(contract.get_font_id(), hash_from_str("MyFont".to_string()));
     }
 
     #[test]
-    fn set_then_get_greeting() {
+    fn set_font_id() {
         let mut contract = Contract::default();
-        contract.set_greeting("howdy".to_string());
-        assert_eq!(contract.get_greeting(), "howdy".to_string());
+        contract.set_font_id(hash_from_str("YourFont".to_string()));
+        assert_eq!(
+            contract.get_font_id(),
+            hash_from_str("YourFont".to_string())
+        );
     }
 }

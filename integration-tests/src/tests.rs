@@ -1,7 +1,25 @@
-use std::{env, fs};
 use near_units::parse_near;
 use serde_json::json;
+use std::{env, fs};
 use workspaces::{Account, Contract};
+
+// Hashing
+use sha2::{Digest, Sha256};
+
+// Util
+// Private function
+fn hash_from_str(message: String) -> String {
+    // create a Sha256 object
+    let mut sha256 = Sha256::new();
+
+    // write input message
+    sha256.update(format!("{}", message));
+
+    // read hash digest and consume hasher
+    let result: String = format!("{:X}", sha256.finalize());
+
+    return result;
+}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -15,52 +33,46 @@ async fn main() -> anyhow::Result<()> {
     // create accounts
     let account = worker.dev_create_account().await?;
     let alice = account
-        .create_subaccount( "alice")
+        .create_subaccount("alice")
         .initial_balance(parse_near!("30 N"))
         .transact()
         .await?
         .into_result()?;
 
     // begin tests
-    test_default_message(&alice, &contract).await?;
-    test_changes_message(&alice, &contract).await?;
+    test_default_font_id(&alice, &contract).await?;
+    test_changes_font_id(&alice, &contract).await?;
     Ok(())
 }
 
-async fn test_default_message(
-    user: &Account,
-    contract: &Contract,
-) -> anyhow::Result<()> {
-    let message: String = user
-        .call( contract.id(), "get_greeting")
+async fn test_default_font_id(user: &Account, contract: &Contract) -> anyhow::Result<()> {
+    let fontid: String = user
+        .call(contract.id(), "get_font_id")
         .args_json(json!({}))
         .transact()
         .await?
         .json()?;
 
-    assert_eq!(message, "Hello".to_string());
-    println!("      Passed ✅ gets default message");
+    assert_eq!(fontid, hash_from_str("MyFont".to_string()));
+    println!("      Passed ✅ gets default fontid");
     Ok(())
 }
 
-async fn test_changes_message(
-    user: &Account,
-    contract: &Contract,
-) -> anyhow::Result<()> {
-    user.call(contract.id(), "set_greeting")
-        .args_json(json!({"message": "Howdy"}))
+async fn test_changes_font_id(user: &Account, contract: &Contract) -> anyhow::Result<()> {
+    user.call(contract.id(), "set_font_id")
+        .args_json(json!({"message": hash_from_str("YourFont".to_string())}))
         .transact()
         .await?
         .into_result()?;
 
-    let message: String = user
-        .call(contract.id(), "get_greeting")
+    let fontid: String = user
+        .call(contract.id(), "get_font_id")
         .args_json(json!({}))
         .transact()
         .await?
         .json()?;
 
-    assert_eq!(message, "Howdy".to_string());
+    assert_eq!(fontid, hash_from_str("YourFont".to_string()));
     println!("      Passed ✅ changes message");
     Ok(())
 }
