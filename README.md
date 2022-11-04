@@ -22,7 +22,7 @@ Run the frontend
     - `/frontend/index.html` is a great place to start exploring.
     - Note that it loads in `/frontend/index.js`
 3. Test your contract with `npm test`
-    - This run the unit tests in `lib.rs` directory.
+    - This run the unit tests in `lib.rs` and the integration-tests.
 
 ## Deploy
 
@@ -39,7 +39,7 @@ Permanent deployment:
     -   `near login`
     -   Create a subaccount (replace `YOUR-NAME` below with your actual account name):
         ```Bash
-        near create-account near-blank-project.YOUR-NAME.testnet --masterAccount YOUR-NAME.testnet
+        near create-account your-project.YOUR-NAME.testnet --masterAccount YOUR-NAME.testnet
         ```
 
 3.  Deploy the contract
@@ -47,7 +47,7 @@ Permanent deployment:
     -   Use the CLI to deploy the contract to TestNet with your account ID.
     -   Replace `PATH_TO_WASM_FILE` with the `wasm` that was generated in `contract` build directory.
         ```Bash
-        near deploy --accountId near-blank-project.YOUR-NAME.testnet --wasmFile PATH_TO_WASM_FILE
+        near deploy --accountId your-project.YOUR-NAME.testnet --wasmFile PATH_TO_WASM_FILE
         ```
 
 4.  Set contract name in your frontend code
