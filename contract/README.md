@@ -2,10 +2,7 @@
 
 ---
 
-Files:
-
--   [Contract](./src/lib.rs)
--   [Font Engine](./src/font_engine.rs)
+## [FontEngine Contract](./src/lib.rs)
 
 ---
 
