@@ -5,72 +5,7 @@ FontFactory Contract
 // NEAR
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{log, near_bindgen};
-
-/*
-// Hashing
-use sha2::{Digest, Sha256};
-
-// Font Engine
-use fonttools::font::{self, Table};
-use fonttools::name::NameRecord;
-use std::fs::File;
-
-// Font Engine
-pub fn mint_font(nft_hash: String) {
-    // Source font file
-    let fontfile = File::open("Paradisio-Regular.otf").unwrap();
-    let mut source_font = font::load(fontfile).expect("Could not load font");
-    // Access the name table
-    // Just fonts with name table will work
-    if let Table::Name(name_table) = source_font
-        .get_table(b"name")
-        .expect("Error reading name table")
-        .expect("There was no name table")
-    {
-        // Change the unique identifier
-        let mut identifier_string = String::from("");
-        let mut removable: usize = 0;
-        for (i, name_record) in name_table.records.iter().enumerate() {
-            if name_record.nameID == 3 {
-                // Manipulate the name table
-                identifier_string =
-                    String::from(name_record.string.replace("UKWN", nft_hash.as_str()));
-                removable = i;
-            }
-        }
-        // Name record
-        let nft_identifier = NameRecord {
-            platformID: 3,
-            encodingID: 1,
-            languageID: 1033,
-            nameID: 3,
-            string: identifier_string.clone(),
-        };
-        // Set the table
-        name_table.records.remove(removable);
-        name_table.records.push(nft_identifier);
-        // Check that the field has changed
-        for name_record in name_table.records.iter() {
-            if name_record.nameID == 3 {
-                assert_eq!(name_record.string, identifier_string.clone());
-            }
-        }
-    }
-    // New File Generator
-    let home = std::env::var("HOME").unwrap();
-    let out_file = format!("{}/Downloads/Paradisio-Regular-NFT.otf", home);
-    let mut nft_font = File::create(out_file).expect("Could not create file");
-    source_font.save(&mut nft_font);
-}
-
-// Util
-fn hash_from_str(message: String) -> String {
-    let mut sha256 = Sha256::new();
-    sha256.update(format!("{}", message));
-    let result: String = format!("{:X}", sha256.finalize());
-    return result;
-}
-*/
+//use near_sdk::env;
 
 // Default FontID before digest
 const DEFAULT_FONTID: &str = "MyFont";
@@ -101,21 +36,88 @@ impl Contract {
         Self { fontid }
     }
 
-    // Public method - returns the hashed FontID saved
+    // Public method - returns the hashed Font ID saved
     pub fn get_font_id(&self) -> String {
         return self.fontid.clone();
     }
 
-    // Public method - accepts a Tx hash, and makes a hash from it and the signer NEAR address
+    // Public method - accepts a Font ID, and makes a hash from it and the signer NEAR address
     pub fn create_custom_font(&mut self, fontid: String) {
+        // Font ID
         log!("Saving Font ID {}", fontid);
         self.fontid = fontid.clone();
+
         /*
-        mint_font(hash_from_str(format!(
-            "{}{}",
-            fontid.clone(),
-            String::from(env::signer_account_id())
-        )));
+        // Font engine
+        use fonttools::font::{self, Table};
+        use fonttools::name::NameRecord;
+        use std::fs::File;
+
+        // Hashing
+        use sha2::{Digest, Sha256};
+
+        // Util
+        pub fn hash_from_str(message: String) -> String {
+            let mut sha256 = Sha256::new();
+            sha256.update(format!("{}", message));
+            let result: String = format!("{:X}", sha256.finalize());
+            return result;
+        }
+
+        // Font manipulation
+        // Source font file
+        let fontfile = File::open("Paradisio-Regular.otf").unwrap();
+        let mut source_font = font::load(fontfile).expect("Could not load font");
+        // Access the name table
+        // Just fonts with name table will work
+        if let Table::Name(name_table) = source_font
+            .get_table(b"name")
+            .expect("Error reading name table")
+            .expect("There was no name table")
+        {
+            // Change the unique identifier
+            let mut identifier_string = String::from("");
+            let mut removable: usize = 0;
+            for (i, name_record) in name_table.records.iter().enumerate() {
+                if name_record.nameID == 3 {
+                    // Manipulate the name table
+                    identifier_string = String::from(
+                        name_record.string.replace(
+                            "UKWN",
+                            hash_from_str(format!(
+                                "{}{}",
+                                self.fontid.clone(),
+                                String::from(env::signer_account_id())
+                            ))
+                            .as_str(),
+                        ),
+                    );
+                    removable = i;
+                }
+            }
+            // Name record
+            let nft_identifier = NameRecord {
+                platformID: 3,
+                encodingID: 1,
+                languageID: 1033,
+                nameID: 3,
+                string: identifier_string.clone(),
+            };
+            // Set the table
+            name_table.records.remove(removable);
+            name_table.records.push(nft_identifier);
+            // Check that the field has changed
+            for name_record in name_table.records.iter() {
+                if name_record.nameID == 3 {
+                    assert_eq!(name_record.string, identifier_string.clone());
+                }
+            }
+        }
+        // New File Generator
+        let home = std::env::var("HOME").unwrap();
+        let out_file = format!("{}/Downloads/Paradisio-Regular-NFT.otf", home);
+        let mut nft_font = File::create(out_file).expect("Could not create file");
+        source_font.save(&mut nft_font);
         */
     }
 }
@@ -137,9 +139,15 @@ mod tests {
         let mut contract = Contract::default();
         contract.create_custom_font("YourFont".to_string());
         assert_eq!(contract.get_font_id(), "YourFont".to_string());
-        /*
-        use fonttools::font::{self, Table};
-        use std::fs::File;
+    }
+
+    /*
+    // Font Tests
+    use fonttools::font::{self, Table};
+    use std::fs::File;
+
+    #[test]
+    fn compare_fonts() {
         // Paths
         let home = std::env::var("HOME").unwrap();
         // Font files
@@ -175,6 +183,6 @@ mod tests {
         }
         // Different data
         assert_ne!(source_font_id, out_font_id);
-        */
     }
+    */
 }

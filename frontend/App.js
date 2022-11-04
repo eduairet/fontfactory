@@ -1,6 +1,7 @@
 import 'regenerator-runtime/runtime';
 import React, { useState, useEffect } from 'react';
 import './assets/styles/global.css';
+//import fontEngine from 'font-engine';
 // Components
 import SignInPrompt from './components/SignInPrompt';
 import SignOutButton from './components/SignOutButton';
@@ -44,6 +45,12 @@ export default function App({ isSignedIn, fontFactory, wallet }) {
             .finally(() => {
                 setWait(false);
                 setCustomFontID('');
+                /*
+                // Package in progress
+                fontEngine.mint_font(
+                    `${customFontID}${wallet.accountId}`
+                );
+                */
             });
     };
 
