@@ -53,7 +53,7 @@ Permanent deployment:
 4.  Set contract name in your frontend code
 
     -   Modify the line in `src/config.js` that sets the account name of the contract. Set it to the account id you used above.
-    -   const CONTRACT_NAME = process.env.CONTRACT_NAME || 'near-blank-project.YOUR-NAME.testnet'
+    -   const CONTRACT_NAME = process.env.CONTRACT_NAME || 'your-project.YOUR-NAME.testnet'
 
 ## Reference
 
