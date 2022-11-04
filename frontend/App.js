@@ -7,7 +7,8 @@ import SignOutButton from './components/SignOutButton';
 
 export default function App({ isSignedIn, fontFactory, wallet }) {
     const [valueFromBlockchain, setValueFromBlockchain] = useState(),
-        [uiPleaseWait, setUiPleaseWait] = useState(true);
+        [wait, setWait] = useState(true),
+        [customFontID, setCustomFontID] = useState('');
 
     // Get blockchian state once on component load
     useEffect(() => {
@@ -16,7 +17,7 @@ export default function App({ isSignedIn, fontFactory, wallet }) {
             .then(setValueFromBlockchain)
             .catch(alert)
             .finally(() => {
-                setUiPleaseWait(false);
+                setWait(false);
             });
     }, []);
 
@@ -31,24 +32,28 @@ export default function App({ isSignedIn, fontFactory, wallet }) {
         );
     }
 
-    function createCustomFont(e) {
+    const createCustomFont = e => {
         e.preventDefault();
-        setUiPleaseWait(true);
-        const { fontidInput } = e.target.elements;
+        setWait(true);
         fontFactory
-            .createCustomFont(fontidInput.value)
+            .createCustomFont(customFontID)
             .then(async () => {
                 return fontFactory.getFontid();
             })
             .then(setValueFromBlockchain)
             .finally(() => {
-                setUiPleaseWait(false);
+                setWait(false);
+                setCustomFontID('');
             });
-    }
+    };
+
+    const handleInput = e => {
+        setCustomFontID(e.target.value);
+    };
 
     return (
         <>
-            <main className={uiPleaseWait ? 'please-wait' : ''}>
+            <main className={wait ? 'wait' : ''}>
                 <div className='logo'></div>
                 <h1>FontFactory</h1>
                 <SignOutButton
@@ -57,11 +62,13 @@ export default function App({ isSignedIn, fontFactory, wallet }) {
                 />
                 <form onSubmit={createCustomFont} className='new-font'>
                     <h3>Mint Custom Font</h3>
-                    <div>
+                    <div className='mint-input'>
                         <input
+                            style={{ width: '100%' }}
                             autoComplete='off'
-                            defaultValue={valueFromBlockchain}
-                            id='fontidInput'
+                            placeholder='Write your Font ID'
+                            value={customFontID}
+                            onChange={handleInput}
                         />
                         <button>
                             <span>Mint</span>

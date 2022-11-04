@@ -15,7 +15,7 @@ export default function SignOutButton({ accountId, onClick }) {
             onMouseLeave={handleOut}
             onClick={onClick}
         >
-            {onButton ? 'Log Out' : accountId}
+            {onButton ? 'Log out' : accountId}
         </button>
     );
 }
