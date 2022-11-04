@@ -4,8 +4,8 @@ FontFactory Contract
 
 // NEAR
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
+use near_sdk::env;
 use near_sdk::{log, near_bindgen};
-//use near_sdk::env;
 
 // Default FontID before digest
 const DEFAULT_FONTID: &str = "MyFont";
@@ -47,7 +47,6 @@ impl Contract {
         log!("Saving Font ID {}", fontid);
         self.fontid = fontid.clone();
 
-        /*
         // Font engine
         use fonttools::font::{self, Table};
         use fonttools::name::NameRecord;
@@ -118,7 +117,6 @@ impl Contract {
         let out_file = format!("{}/Downloads/Paradisio-Regular-NFT.otf", home);
         let mut nft_font = File::create(out_file).expect("Could not create file");
         source_font.save(&mut nft_font);
-        */
     }
 }
 
@@ -141,7 +139,6 @@ mod tests {
         assert_eq!(contract.get_font_id(), "YourFont".to_string());
     }
 
-    /*
     // Font Tests
     use fonttools::font::{self, Table};
     use std::fs::File;
@@ -184,5 +181,4 @@ mod tests {
         // Different data
         assert_ne!(source_font_id, out_font_id);
     }
-    */
 }

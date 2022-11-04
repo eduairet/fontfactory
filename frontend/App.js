@@ -90,6 +90,26 @@ export default function App({ isSignedIn, fontFactory, wallet }) {
                     </p>
                 </div>
             </main>
+            <footer>
+                <p>
+                    Contract:{' '}
+                    <a
+                        href='https://explorer.testnet.near.org/accounts/fontfactorybeta1.eduairet.testnet'
+                        target='blank'
+                    >
+                        fontfactorybeta1.eduairet.testnet
+                    </a>
+                </p>
+                <p>
+                    GitHub:{' '}
+                    <a
+                        href='https://github.com/eduairet/fontfactory'
+                        target='blank'
+                    >
+                        @eduairet/fontfactory
+                    </a>
+                </p>
+            </footer>
         </>
     );
 }
