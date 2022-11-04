@@ -1,16 +1,21 @@
-/* Talking with a contract often involves transforming data, we recommend you to encapsulate that logic into a class */
+export class FontFactory {
+    constructor({ contractId, walletToUse }) {
+        this.contractId = contractId;
+        this.wallet = walletToUse;
+    }
 
-export class HelloNEAR {
-  constructor({ contractId, walletToUse }) {
-    this.contractId = contractId;
-    this.wallet = walletToUse;    
-  }
+    async getFontid() {
+        return await this.wallet.viewMethod({
+            contractId: this.contractId,
+            method: 'get_font_id',
+        });
+    }
 
-  async getGreeting() {
-    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'get_greeting' });
-  }
-
-  async setGreeting(greeting) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'set_greeting', args: { message: greeting } });
-  }
+    async createCustomFont(fontid) {
+        return await this.wallet.callMethod({
+            contractId: this.contractId,
+            method: 'create_custom_font',
+            args: { fontid: fontid },
+        });
+    }
 }

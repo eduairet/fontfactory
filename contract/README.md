@@ -53,4 +53,4 @@
 
 5. Chack your font in your download folder
     - Open it in Font Book to check the unique identifier
-      ![Success](../resources/meta.png)
+      ![Success](../frontend/assets/images/meta.png)

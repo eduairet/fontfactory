@@ -1,67 +1,81 @@
 import 'regenerator-runtime/runtime';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import './assets/styles/global.css';
+// Components
+import SignInPrompt from './components/SignInPrompt';
+import SignOutButton from './components/SignOutButton';
 
-import './assets/global.css';
+export default function App({ isSignedIn, fontFactory, wallet }) {
+    const [valueFromBlockchain, setValueFromBlockchain] = useState(),
+        [uiPleaseWait, setUiPleaseWait] = useState(true);
 
-import { EducationalText, SignInPrompt, SignOutButton } from './ui-components';
+    // Get blockchian state once on component load
+    useEffect(() => {
+        fontFactory
+            .getFontid()
+            .then(setValueFromBlockchain)
+            .catch(alert)
+            .finally(() => {
+                setUiPleaseWait(false);
+            });
+    }, []);
 
-
-export default function App({ isSignedIn, helloNEAR, wallet }) {
-  const [valueFromBlockchain, setValueFromBlockchain] = React.useState();
-
-  const [uiPleaseWait, setUiPleaseWait] = React.useState(true);
-
-  // Get blockchian state once on component load
-  React.useEffect(() => {
-    helloNEAR.getGreeting()
-      .then(setValueFromBlockchain)
-      .catch(alert)
-      .finally(() => {
-        setUiPleaseWait(false);
-      });
-  }, []);
-
-  /// If user not signed-in with wallet - show prompt
-  if (!isSignedIn) {
-    // Sign-in flow will reload the page later
-    return <SignInPrompt greeting={valueFromBlockchain} onClick={() => wallet.signIn()}/>;
-  }
-
-  function changeGreeting(e) {
-    e.preventDefault();
-    setUiPleaseWait(true);
-    const { greetingInput } = e.target.elements;
-    helloNEAR.setGreeting(greetingInput.value)
-      .then(async () => {return helloNEAR.getGreeting();})
-      .then(setValueFromBlockchain)
-      .finally(() => {
-        setUiPleaseWait(false);
-      });
-  }
-
-  return (
-    <>
-      <SignOutButton accountId={wallet.accountId} onClick={() => wallet.signOut()}/>
-      <main className={uiPleaseWait ? 'please-wait' : ''}>
-        <h1>
-          The contract says: <span className="greeting">{valueFromBlockchain}</span>
-        </h1>
-        <form onSubmit={changeGreeting} className="change">
-          <label>Change greeting:</label>
-          <div>
-            <input
-              autoComplete="off"
-              defaultValue={valueFromBlockchain}
-              id="greetingInput"
+    /// If user not signed-in with wallet - show prompt
+    if (!isSignedIn) {
+        // Sign-in flow will reload the page later
+        return (
+            <SignInPrompt
+                fontid={valueFromBlockchain}
+                onClick={() => wallet.signIn()}
             />
-            <button>
-              <span>Save</span>
-              <div className="loader"></div>
-            </button>
-          </div>
-        </form>
-        <EducationalText/>
-      </main>
-    </>
-  );
+        );
+    }
+
+    function createCustomFont(e) {
+        e.preventDefault();
+        setUiPleaseWait(true);
+        const { fontidInput } = e.target.elements;
+        fontFactory
+            .createCustomFont(fontidInput.value)
+            .then(async () => {
+                return fontFactory.getFontid();
+            })
+            .then(setValueFromBlockchain)
+            .finally(() => {
+                setUiPleaseWait(false);
+            });
+    }
+
+    return (
+        <>
+            <main className={uiPleaseWait ? 'please-wait' : ''}>
+                <div className='logo'></div>
+                <h1>FontFactory</h1>
+                <SignOutButton
+                    accountId={wallet.accountId}
+                    onClick={() => wallet.signOut()}
+                />
+                <form onSubmit={createCustomFont} className='new-font'>
+                    <h3>Mint Custom Font</h3>
+                    <div>
+                        <input
+                            autoComplete='off'
+                            defaultValue={valueFromBlockchain}
+                            id='fontidInput'
+                        />
+                        <button>
+                            <span>Mint</span>
+                            <div className='loader'></div>
+                        </button>
+                    </div>
+                </form>
+                <div className='fontid'>
+                    <p>Latest Font ID</p>
+                    <p className='latest'>
+                        <code>{valueFromBlockchain}</code>
+                    </p>
+                </div>
+            </main>
+        </>
+    );
 }

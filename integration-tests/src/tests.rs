@@ -53,13 +53,13 @@ async fn test_create_custom_font(user: &Account, contract: &Contract) -> anyhow:
         .into_result()?;
 
     let fontid: String = user
-        .call(contract.id(), "create_custom_font")
+        .call(contract.id(), "get_font_id")
         .args_json(json!({}))
         .transact()
         .await?
         .json()?;
 
     assert_eq!(fontid, "YourFont".to_string());
-    println!("      Passed ✅ changes message");
+    println!("      Passed ✅ custom fontid");
     Ok(())
 }

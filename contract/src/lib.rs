@@ -4,8 +4,9 @@ FontFactory Contract
 
 // NEAR
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, log, near_bindgen};
+use near_sdk::{log, near_bindgen};
 
+/*
 // Hashing
 use sha2::{Digest, Sha256};
 
@@ -69,6 +70,7 @@ fn hash_from_str(message: String) -> String {
     let result: String = format!("{:X}", sha256.finalize());
     return result;
 }
+*/
 
 // Default FontID before digest
 const DEFAULT_FONTID: &str = "MyFont";
@@ -105,15 +107,16 @@ impl Contract {
     }
 
     // Public method - accepts a Tx hash, and makes a hash from it and the signer NEAR address
-    #[private]
     pub fn create_custom_font(&mut self, fontid: String) {
         log!("Saving Font ID {}", fontid);
         self.fontid = fontid.clone();
+        /*
         mint_font(hash_from_str(format!(
             "{}{}",
             fontid.clone(),
             String::from(env::signer_account_id())
         )));
+        */
     }
 }
 
@@ -131,11 +134,12 @@ mod tests {
 
     #[test]
     fn create_custom_font() {
-        use fonttools::font::{self, Table};
-        use std::fs::File;
         let mut contract = Contract::default();
         contract.create_custom_font("YourFont".to_string());
         assert_eq!(contract.get_font_id(), "YourFont".to_string());
+        /*
+        use fonttools::font::{self, Table};
+        use std::fs::File;
         // Paths
         let home = std::env::var("HOME").unwrap();
         // Font files
@@ -171,5 +175,6 @@ mod tests {
         }
         // Different data
         assert_ne!(source_font_id, out_font_id);
+        */
     }
 }
