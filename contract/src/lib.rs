@@ -4,8 +4,7 @@ FontFactory Contract
 
 // NEAR
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::env::signer_account_id;
-use near_sdk::{log, near_bindgen};
+use near_sdk::{env, log, near_bindgen};
 
 // Hashing
 use sha2::{Digest, Sha256};
@@ -29,14 +28,14 @@ const DEFAULT_FONTID: &str = "MyFont";
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Contract {
-    fontid: String,
+    pub fontid: String,
 }
 
 // Default Initialization
 impl Default for Contract {
     fn default() -> Self {
         Self {
-            fontid: hash_from_str(DEFAULT_FONTID.to_string()),
+            fontid: DEFAULT_FONTID.to_string(),
         }
     }
 }
@@ -57,13 +56,14 @@ impl Contract {
     }
 
     // Public method - accepts a Tx hash, and makes a hash from it and the signer NEAR address
+    #[private]
     pub fn create_custom_font(&mut self, fontid: String) {
         log!("Saving Font ID {}", fontid);
         self.fontid = fontid.clone();
         mint_font(hash_from_str(format!(
             "{}{}",
             fontid.clone(),
-            String::from(signer_account_id())
+            String::from(env::signer_account_id())
         )));
     }
 }
@@ -77,7 +77,7 @@ mod tests {
     fn get_font_id() {
         let contract = Contract::default();
         // this test did not call set_greeting so should return the default "Hello" greeting
-        assert_eq!(contract.get_font_id(), hash_from_str("MyFont".to_string()));
+        assert_eq!(contract.get_font_id(), "MyFont".to_string());
     }
 
     #[test]
@@ -85,11 +85,8 @@ mod tests {
         use fonttools::font::{self, Table};
         use std::fs::File;
         let mut contract = Contract::default();
-        contract.create_custom_font(hash_from_str("YourFont".to_string()));
-        assert_eq!(
-            contract.get_font_id(),
-            hash_from_str("YourFont".to_string())
-        );
+        contract.create_custom_font("YourFont".to_string());
+        assert_eq!(contract.get_font_id(), "YourFont".to_string());
         // Paths
         let home = std::env::var("HOME").unwrap();
         // Font files

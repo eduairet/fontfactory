@@ -8,17 +8,6 @@ use serde_json::json;
 use std::{env, fs};
 use workspaces::{Account, Contract};
 
-// Hashing
-use sha2::{Digest, Sha256};
-
-// Util
-fn hash_from_str(message: String) -> String {
-    let mut sha256 = Sha256::new();
-    sha256.update(format!("{}", message));
-    let result: String = format!("{:X}", sha256.finalize());
-    return result;
-}
-
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let wasm_arg: &str = &(env::args().nth(1).unwrap());
@@ -51,14 +40,14 @@ async fn test_default_font_id(user: &Account, contract: &Contract) -> anyhow::Re
         .await?
         .json()?;
 
-    assert_eq!(fontid, hash_from_str("MyFont".to_string()));
+    assert_eq!(fontid, "MyFont".to_string());
     println!("      Passed ✅ gets default fontid");
     Ok(())
 }
 
 async fn test_create_custom_font(user: &Account, contract: &Contract) -> anyhow::Result<()> {
     user.call(contract.id(), "create_custom_font")
-        .args_json(json!({"fontid": hash_from_str("YourFont".to_string())}))
+        .args_json(json!({"fontid": "YourFont".to_string()}))
         .transact()
         .await?
         .into_result()?;
@@ -70,7 +59,7 @@ async fn test_create_custom_font(user: &Account, contract: &Contract) -> anyhow:
         .await?
         .json()?;
 
-    assert_eq!(fontid, hash_from_str("YourFont".to_string()));
+    assert_eq!(fontid, "YourFont".to_string());
     println!("      Passed ✅ changes message");
     Ok(())
 }
