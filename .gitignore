@@ -12,6 +12,7 @@ templates/out
 tmp-project
 #parcel
 .cache
+.parcel-cache
 
 # build
 /build
