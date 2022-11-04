@@ -16,8 +16,9 @@ tmp-project
 
 # build
 /build
-/out
 /dist
+frontend/dist
+/out
 _testrun
 
 # keys
